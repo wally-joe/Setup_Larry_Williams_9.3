@@ -1,0 +1,68 @@
+input
+  period(15);
+var
+x,n,i:integer;
+MM: float;
+
+function Lower_index(SerieDados : Float;periodo : integer) : integer;
+var
+  i,n : integer;
+begin
+  n := periodo - 1;
+  i := 0;
+  while (n >= 0) do
+    begin
+      if (Close[n] < Close[i]) then
+        begin
+          i := n;
+        end;
+      n := n - 1;
+    end;
+  result := i;
+end;
+function Higher_index(SerieDados : Float;periodo : integer) : integer;
+var
+  i,n : integer;
+begin
+  n := periodo - 1;
+  i := 0;
+  while (n >= 0) do
+    begin
+      if (Close[n] > Close[i]) then
+        begin
+          i := n;
+        end;
+      n := n - 1;
+    end;
+  result := i;
+end;
+begin
+  MM:=MediaExp(9,Close);
+
+  i:= Lower_index(Close,period);
+  if (Close[i]<MM[i]) and (Close[i+1]<MM[i+1]) and (Close[i+2]<MM[i+2]) and (Close[i+3]<MM[i+3]) and (i>=2)
+  then
+  begin
+    if (Open[i-1]>Close[i]) and (Close[i-1]<High[i]) or (Open[i-1]<high[i]) and (Close[i-1]>Close[i])  then
+    begin
+      n:=i;
+      while(n>=0) do
+      begin
+        if (Close[n]>Close[i]) and (MM[n]<MM[n+1]) and (MM[n+1]<MM[n+2]) and (MM[n+2]<MM[n+3]) and (n>0) then
+        begin
+          if (Close[n-1]<Low[n]) then 
+          begin
+            x:=-1;
+            n:=-1;
+            paintbar(clred);
+            Alert(clRed);
+          end;  
+        end;
+        n:=n-1; 
+      end;
+    end;
+  end;
+  plot(x);
+  x:=0; 
+ 
+end;
